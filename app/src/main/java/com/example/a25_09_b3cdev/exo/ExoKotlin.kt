@@ -7,7 +7,8 @@ import com.example.a25_09_b3cdev.PRICE_SANDWITCH
 var v2: String? = "hello"
 
 fun main() {
-    var res = boulangerie(1, 2, 3)
+    var res : Double? = boulangerie(1, 2, 3)
+
     println("res=$res")
     println(boulangerie(nbS = 3)) //boulangerie(0, 0, 3)
 

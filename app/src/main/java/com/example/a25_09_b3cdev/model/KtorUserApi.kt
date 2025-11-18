@@ -62,7 +62,7 @@ object KtorUserApi {
 //            }
         }.body()
         //possibilité de typer le body
-        //.body<List<MuseumObject>>()
+        //.body<UserObject>()
     }
 
     //Ferme le Client mais celui ci ne sera plus utilisable. Uniquement pour le main
