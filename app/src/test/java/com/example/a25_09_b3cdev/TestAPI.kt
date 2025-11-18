@@ -4,10 +4,20 @@ import com.example.a25_09_b3cdev.model.KtorMuseumApi
 import com.example.a25_09_b3cdev.model.KtorUserApi
 import com.example.a25_09_b3cdev.model.KtorWeatherApi
 import com.example.a25_09_b3cdev.model.MuseumObject
+import com.example.a25_09_b3cdev.viewmodel.MainViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 class TestAPI {
+
+    @Test
+    fun testMainViewModel() = runBlocking {
+        val viewModel = MainViewModel()
+
+        viewModel.loadWeathers("Nice")
+        //Affichage de la liste (qui doit être remplie) contenue dans la donnée observable
+        println("List : ${viewModel.dataList.value}")
+    }
 
     @Test
     fun testKtorWeatherAPI() = runBlocking {

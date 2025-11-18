@@ -44,9 +44,15 @@ object KtorWeatherApi {
 //                append("Custom-Header", "CustomValue")
 //            }
         }.body<WeatherAPIResult>()
+
+        res.list.forEach {w->
+            w.weather.forEach {
+                it.icon = "https://openweathermap.org/img/wn/${it.icon}@4x.png"
+            }
+        }
+
         return res.list
-        //possibilité de typer le body
-        //.body<UserObject>()
+
     }
 
     //Ferme le Client mais celui ci ne sera plus utilisable. Uniquement pour le main
@@ -66,7 +72,7 @@ data class WeatherBean(val name:String, val id : Long, val main  : TempBean, val
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class DescriptionBean(val description:String, val icon:String)
+data class DescriptionBean(val description:String, var icon:String)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
