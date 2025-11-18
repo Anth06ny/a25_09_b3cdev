@@ -2,6 +2,7 @@ package com.example.a25_09_b3cdev
 
 import com.example.a25_09_b3cdev.model.KtorMuseumApi
 import com.example.a25_09_b3cdev.model.KtorUserApi
+import com.example.a25_09_b3cdev.model.KtorWeatherApi
 import com.example.a25_09_b3cdev.model.MuseumObject
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -9,8 +10,24 @@ import org.junit.Test
 class TestAPI {
 
     @Test
+    fun testKtorWeatherAPI() = runBlocking {
+
+        val res = KtorWeatherApi.loadWeathers("Nice")
+        for (r in res) {
+            println(
+                """
+            Il fait ${r.main.temp}° à ${r.name} (id=${r.id}) avec un vent de ${r.wind.speed} m/s
+            -Description : ${r.weather.firstOrNull()?.description ?: "-"}
+            -Icône : ${r.weather.firstOrNull()?.icon ?: "-"}
+        """.trimIndent()
+            )
+        }
+    }
+
+
+    @Test
     fun testKtorMuseumAPI() = runBlocking {
-        val list : List<MuseumObject> = KtorMuseumApi.getData()
+        val list: List<MuseumObject> = KtorMuseumApi.getData()
         println(list.joinToString(separator = "\n\n"))
         KtorMuseumApi.close()
     }
