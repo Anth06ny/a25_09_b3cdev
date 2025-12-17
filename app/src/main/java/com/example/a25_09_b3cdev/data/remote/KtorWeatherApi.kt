@@ -37,15 +37,15 @@ object KtorWeatherApi {
 
     //GET Le JSON reçu sera parser en List<MuseumObject>,
     //Crash si le JSON ne correspond pas
-    suspend fun loadWeathers(cityname:String): List<WeatherEntity> {
-        val res =  client.get(API_URL + cityname) {
+    suspend fun loadWeathers(cityname: String): List<WeatherEntity> {
+        val res = client.get(API_URL + cityname) {
 //            headers {
 //                append("Authorization", "Bearer YOUR_TOKEN")
 //                append("Custom-Header", "CustomValue")
 //            }
         }.body<WeatherAPIResult>()
 
-        res.list.forEach {w->
+        res.list.forEach { w ->
             w.weather.forEach {
                 it.icon = "https://openweathermap.org/img/wn/${it.icon}@4x.png"
             }
@@ -64,23 +64,29 @@ object KtorWeatherApi {
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class WeatherAPIResult(val list:List<WeatherEntity>)
+data class WeatherAPIResult(val list: List<WeatherEntity>)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class WeatherEntity(val name:String, val id : Long, val main  : TempEntity, val wind : WindEntity, val weather : List<DescriptionEntity>)
+data class WeatherEntity(val name: String, val id: Long, val main: TempEntity, val wind: WindEntity, val weather: List<DescriptionEntity>) {
+
+    fun getResume() = """
+        Il fait ${main.temp}° à $name avec un vent de ${wind.speed} m/s
+    """.trimIndent()
+
+}
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class DescriptionEntity(val description:String, var icon:String)
+data class DescriptionEntity(val description: String, var icon: String)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class TempEntity(val temp:Double)
+data class TempEntity(val temp: Double)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class WindEntity(val speed:Double)
+data class WindEntity(val speed: Double)
 
 
 
