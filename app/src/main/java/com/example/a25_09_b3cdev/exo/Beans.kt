@@ -1,4 +1,4 @@
-package com.example.a25_09_b3cdev.model
+package com.example.a25_09_b3cdev.exo
 
 import java.util.Random
 

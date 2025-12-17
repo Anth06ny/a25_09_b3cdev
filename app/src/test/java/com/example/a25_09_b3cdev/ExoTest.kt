@@ -1,6 +1,6 @@
 package com.example.a25_09_b3cdev
 
-import com.example.a25_09_b3cdev.model.WindBean
+import com.example.a25_09_b3cdev.data.remote.WindBean
 import org.junit.Test
 
 

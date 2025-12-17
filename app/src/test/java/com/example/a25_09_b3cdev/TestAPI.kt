@@ -1,10 +1,10 @@
 package com.example.a25_09_b3cdev
 
-import com.example.a25_09_b3cdev.model.KtorMuseumApi
-import com.example.a25_09_b3cdev.model.KtorUserApi
-import com.example.a25_09_b3cdev.model.KtorWeatherApi
-import com.example.a25_09_b3cdev.model.MuseumObject
-import com.example.a25_09_b3cdev.viewmodel.MainViewModel
+import com.example.a25_09_b3cdev.data.remote.KtorMuseumApi
+import com.example.a25_09_b3cdev.data.remote.KtorUserApi
+import com.example.a25_09_b3cdev.data.remote.KtorWeatherApi
+import com.example.a25_09_b3cdev.data.remote.MuseumObject
+import com.example.a25_09_b3cdev.presentation.viewmodel.MainViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

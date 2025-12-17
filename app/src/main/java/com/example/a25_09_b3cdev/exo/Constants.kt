@@ -1,4 +1,4 @@
-package com.example.a25_09_b3cdev
+package com.example.a25_09_b3cdev.exo
 
 
 const val PRICE_CROISSANT = 0.95

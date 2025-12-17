@@ -1,4 +1,4 @@
-package com.example.a25_09_b3cdev.model
+package com.example.a25_09_b3cdev.data.remote
 
 import android.annotation.SuppressLint
 import io.ktor.client.HttpClient
@@ -10,13 +10,29 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-object KtorWeatherApi {
+//Suspend sera expliqué dans le chapitre des coroutines
+suspend fun main() {
+    val user = KtorUserApi.getRandomUser()
+    repeat(5) {
+        println(
+            """
+        Il s'appelle ${user.name} pour le contacter :
+        Phone : ${user.coord?.phone ?: "-"}
+        Mail : ${user.coord?.mail ?: "-"}
+    """.trimIndent()
+        )
+
+        println(user)
+    }
+    KtorMuseumApi.close()
+}
+
+object KtorUserApi {
     private const val API_URL =
-        "https://api.openweathermap.org/data/2.5/find?appid=b80967f0a6bd10d23e44848547b26550&units=metric&lang=fr&q="
+        "https://www.amonteiro.fr/api/randomuser"
 
     //Création et réglage du client
     private val client = HttpClient {
@@ -38,50 +54,39 @@ object KtorWeatherApi {
 
     //GET Le JSON reçu sera parser en List<MuseumObject>,
     //Crash si le JSON ne correspond pas
-    suspend fun loadWeathers(cityname:String): List<WeatherBean> {
-        val res =  client.get(API_URL + cityname) {
+    suspend fun getRandomUser(): UserObject {
+        return client.get(API_URL) {
 //            headers {
 //                append("Authorization", "Bearer YOUR_TOKEN")
 //                append("Custom-Header", "CustomValue")
 //            }
-        }.body<WeatherAPIResult>()
-
-        res.list.forEach {w->
-            w.weather.forEach {
-                it.icon = "https://openweathermap.org/img/wn/${it.icon}@4x.png"
-            }
-        }
-
-        return res.list
-
+        }.body()
+        //possibilité de typer le body
+        //.body<UserObject>()
     }
 
     //Ferme le Client mais celui ci ne sera plus utilisable. Uniquement pour le main
     fun close() = client.close()
 
+    //Avancés : Exemple avec Flow
+    //fun getDataFlow() = flow<List<MuseumObject>> {
+    //    emit(client.get(API_URL).body())
+    //}
 }
 
 //DATA CLASS
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class WeatherAPIResult(val list:List<WeatherBean>)
+data class UserObject(
+    val name: String,
+    val age: Int,
+    val coord: CoordObject?,
+)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class WeatherBean(val name:String, val id : Long, val main  : TempBean, val wind : WindBean, val weather : List<DescriptionBean>)
-
-@SuppressLint("UnsafeOptInUsageError")
-@Serializable //KotlinX impose cette annotation
-data class DescriptionBean(val description:String, var icon:String)
-
-@SuppressLint("UnsafeOptInUsageError")
-@Serializable //KotlinX impose cette annotation
-data class TempBean(val temp:Double)
-
-@SuppressLint("UnsafeOptInUsageError")
-@Serializable //KotlinX impose cette annotation
-data class WindBean(val speed:Double)
-
-
-
+data class CoordObject(
+    val phone: String?,
+    val mail: String?,
+)

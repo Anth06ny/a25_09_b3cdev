@@ -1,4 +1,4 @@
-package com.example.a25_09_b3cdev.ui.theme
+package com.example.a25_09_b3cdev.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,6 +1,5 @@
-package com.example.a25_09_b3cdev.ui.theme
+package com.example.a25_09_b3cdev.presentation.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

@@ -1,9 +1,9 @@
-package com.example.a25_09_b3cdev.viewmodel
+package com.example.a25_09_b3cdev.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.a25_09_b3cdev.model.KtorWeatherApi
-import com.example.a25_09_b3cdev.model.WeatherBean
+import com.example.a25_09_b3cdev.data.remote.KtorWeatherApi
+import com.example.a25_09_b3cdev.data.remote.WeatherBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
