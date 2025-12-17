@@ -10,6 +10,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -38,6 +39,7 @@ object KtorWeatherApi {
     //GET Le JSON reçu sera parser en List<MuseumObject>,
     //Crash si le JSON ne correspond pas
     suspend fun loadWeathers(cityname:String): List<WeatherBean> {
+        delay(2000)
         val res =  client.get(API_URL + cityname) {
 //            headers {
 //                append("Authorization", "Bearer YOUR_TOKEN")
