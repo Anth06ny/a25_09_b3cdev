@@ -37,7 +37,7 @@ object KtorWeatherApi {
 
     //GET Le JSON reçu sera parser en List<MuseumObject>,
     //Crash si le JSON ne correspond pas
-    suspend fun loadWeathers(cityname:String): List<WeatherBean> {
+    suspend fun loadWeathers(cityname:String): List<WeatherEntity> {
         val res =  client.get(API_URL + cityname) {
 //            headers {
 //                append("Authorization", "Bearer YOUR_TOKEN")
@@ -64,23 +64,23 @@ object KtorWeatherApi {
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class WeatherAPIResult(val list:List<WeatherBean>)
+data class WeatherAPIResult(val list:List<WeatherEntity>)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class WeatherBean(val name:String, val id : Long, val main  : TempBean, val wind : WindBean, val weather : List<DescriptionBean>)
+data class WeatherEntity(val name:String, val id : Long, val main  : TempEntity, val wind : WindEntity, val weather : List<DescriptionEntity>)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class DescriptionBean(val description:String, var icon:String)
+data class DescriptionEntity(val description:String, var icon:String)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class TempBean(val temp:Double)
+data class TempEntity(val temp:Double)
 
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable //KotlinX impose cette annotation
-data class WindBean(val speed:Double)
+data class WindEntity(val speed:Double)
 
 
 

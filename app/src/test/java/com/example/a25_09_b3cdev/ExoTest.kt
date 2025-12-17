@@ -1,6 +1,6 @@
 package com.example.a25_09_b3cdev
 
-import com.example.a25_09_b3cdev.data.remote.WindBean
+import com.example.a25_09_b3cdev.data.remote.WindEntity
 import org.junit.Test
 
 
@@ -20,15 +20,15 @@ class ExoTest {
     @Test
     fun main() {
 
-        var toto = MyLiveData(WindBean(12.5))
+        var toto = MyLiveData(WindEntity(12.5))
 
-        toto.value = WindBean(13.5)
+        toto.value = WindEntity(13.5)
 
         toto.action = {
             println(it)
         }
 
-        toto.value = WindBean(14.5)
+        toto.value = WindEntity(14.5)
 
 
     }

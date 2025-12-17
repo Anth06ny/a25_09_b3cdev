@@ -13,7 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.a25_09_b3cdev.presentation.ui.theme.A25_09_b3cdevTheme
+import com.example.a25_09_b3cdev.presentation.viewmodel.MainViewModel
 
 @Preview(showBackground = true, showSystemUi = true)
 //@Preview(showBackground = true, showSystemUi = true,
@@ -31,20 +33,25 @@ fun SearchScreenPreview() {
 
 @Composable
 fun SearchScreen(
-    modifier:Modifier = Modifier
+    modifier: Modifier = Modifier,
+    mainViewModel : MainViewModel = MainViewModel()
 ) {
-    Column (modifier= modifier) {
-        println("SearchScreen()")
-        Text(text = "Text1",fontSize = 20.sp)
-        Spacer(Modifier.size(8.dp))
-        Text(text = "Text2",fontSize = 14.sp)
 
-        PictureRowItem("hello")
-        PictureRowItem("hello2")
+    val list = mainViewModel.dataList.collectAsStateWithLifecycle().value
+
+    Column(modifier = modifier) {
+        println("SearchScreen()")
+        Text(text = "Text1", fontSize = 20.sp)
+        Spacer(Modifier.size(8.dp))
+        Text(text = "Text2", fontSize = 14.sp)
+
+        repeat(list.size) {
+            PictureRowItem(list[it].name)
+        }
     }
 }
 
 @Composable
-fun PictureRowItem(text:String) {
+fun PictureRowItem(text: String) {
     Text(text = text, color = Color.Blue)
 }
