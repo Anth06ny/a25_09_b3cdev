@@ -39,7 +39,6 @@ object KtorWeatherApi {
     //GET Le JSON reçu sera parser en List<MuseumObject>,
     //Crash si le JSON ne correspond pas
     suspend fun loadWeathers(cityname:String): List<WeatherBean> {
-        delay(2000)
         val res =  client.get(API_URL + cityname) {
 //            headers {
 //                append("Authorization", "Bearer YOUR_TOKEN")
