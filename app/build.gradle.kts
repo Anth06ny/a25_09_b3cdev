@@ -45,11 +45,14 @@ dependencies {
     //Intégration avec la bibliothèque de serialisation, gestion des headers
     implementation("io.ktor:ktor-client-content-negotiation:3.2.2")
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.2.2") //Serialisation JSON
-    implementation ("io.ktor:ktor-client-logging-jvm:3.2.2")  //log
+    implementation("io.ktor:ktor-client-logging-jvm:3.2.2")  //log
 
     //Coil ImageLoader
     implementation("io.coil-kt.coil3:coil-network-ktor3:3.2.0")
     implementation("io.coil-kt.coil3:coil-compose:3.2.0")
+
+    //Pour la creation du ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.a25_09_b3cdev.R
 import com.example.a25_09_b3cdev.data.remote.WeatherEntity
@@ -57,8 +58,12 @@ fun SearchScreenPreview() {
     //Utilisé par exemple dans MainActivity.kt sous setContent {...}
     A25_09_b3cdevTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            val mainViewModel = MainViewModel()
+            mainViewModel.loadFakeData(true, "une erreur")
+
             SearchScreen(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                mainViewModel = mainViewModel
             )
         }
     }
@@ -67,14 +72,15 @@ fun SearchScreenPreview() {
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel = MainViewModel()
+    //Le framework qui crée et recupère l'instance
+    mainViewModel: MainViewModel = viewModel()
 ) {
 
 
     val searchText : MutableState<String> = remember { mutableStateOf("") }
 
     val list = mainViewModel.dataList.collectAsStateWithLifecycle().value
-        .filter { it.name.contains(searchText.value, ignoreCase = true) }
+        //.filter { it.name.contains(searchText.value, ignoreCase = true) }
 
     Column(
         modifier = modifier
@@ -113,7 +119,9 @@ fun SearchScreen(
             }
 
             Button(
-                onClick = { /* Do something! */ },
+                onClick = {
+                    mainViewModel.loadWeathers(searchText.value)
+                },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding
             ) {
                 Icon(
