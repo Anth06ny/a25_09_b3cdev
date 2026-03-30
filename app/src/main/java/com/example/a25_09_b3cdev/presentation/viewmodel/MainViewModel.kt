@@ -7,7 +7,9 @@ import com.example.a25_09_b3cdev.data.remote.KtorWeatherApi
 import com.example.a25_09_b3cdev.data.remote.TempEntity
 import com.example.a25_09_b3cdev.data.remote.WeatherEntity
 import com.example.a25_09_b3cdev.data.remote.WindEntity
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -22,12 +24,12 @@ suspend fun main() {
     }
     //Affichage de la liste (qui doit être remplie) contenue dans la donnée observable
     println("List : ${viewModel.dataList.value}")
-    println("ErrorMessage : ${viewModel.errorMessage.value}" )
+    println("ErrorMessage : ${viewModel.errorMessage.value}")
     //Pour que le programme s'arrête, inutile sur Android
     KtorWeatherApi.close()
 }
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
     //MutableStateFlow est une donnée observable
     val dataList = MutableStateFlow(emptyList<WeatherEntity>())
     val runInProgress = MutableStateFlow(false)
@@ -38,7 +40,7 @@ class MainViewModel : ViewModel() {
 //        loadFakeData()
 //    }
 
-    fun loadFakeData(runInProgress :Boolean = false, errorMessage:String = "" ) {
+    fun loadFakeData(runInProgress: Boolean = false, errorMessage: String = "") {
         this.runInProgress.value = runInProgress
         this.errorMessage.value = errorMessage
         dataList.value = listOf(
@@ -82,27 +84,25 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun loadWeathers(cityName: String) {
+    fun loadWeathers(cityName: String) : Job {
         runInProgress.value = true
-        errorMessage.value =""
+        errorMessage.value = ""
 
-        viewModelScope.launch(Dispatchers.IO) {
+        val job = viewModelScope.launch(dispatcher) {
             try {
 
-                if(cityName.length < 3) {
+                if (cityName.length < 3) {
                     throw Exception("Le nom de la ville doit contenir au moins 3 caractères")
                 }
 
                 dataList.value = KtorWeatherApi.loadWeathers(cityName)
-            }
-            catch(e: Throwable){
+            } catch (e: Throwable) {
                 e.printStackTrace()
                 errorMessage.value = e.message ?: "Une erreur est survenue"
-            }
-            finally {
+            } finally {
                 runInProgress.value = false
             }
         }
-
+        return job
     }
 }

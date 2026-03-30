@@ -56,6 +56,9 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.9.+")
 
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.+")
+    testImplementation("io.mockk:mockk:1.13.+")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
