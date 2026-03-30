@@ -13,6 +13,10 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+fun main() {
+
+}
+
 object KtorWeatherApi {
     private const val API_URL =
         "https://api.openweathermap.org/data/2.5/find?appid=b80967f0a6bd10d23e44848547b26550&units=metric&lang=fr&q="
@@ -66,7 +70,7 @@ object KtorWeatherApi {
 @Serializable //KotlinX impose cette annotation
 data class WeatherAPIResult(val list: List<WeatherEntity>)
 
-@SuppressLint("UnsafeOptInUsageError")
+
 @Serializable //KotlinX impose cette annotation
 data class WeatherEntity(val name: String, val id: Long, val main: TempEntity, val wind: WindEntity, val weather: List<DescriptionEntity>) {
 

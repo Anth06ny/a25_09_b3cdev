@@ -95,7 +95,7 @@ class MainViewModel : ViewModel() {
 
                 dataList.value = KtorWeatherApi.loadWeathers(cityName)
             }
-            catch(e: Exception){
+            catch(e: Throwable){
                 e.printStackTrace()
                 errorMessage.value = e.message ?: "Une erreur est survenue"
             }

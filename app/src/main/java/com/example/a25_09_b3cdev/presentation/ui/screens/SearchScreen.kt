@@ -43,12 +43,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.a25_09_b3cdev.R
 import com.example.a25_09_b3cdev.data.remote.WeatherEntity
 import com.example.a25_09_b3cdev.presentation.ui.MyError
+import com.example.a25_09_b3cdev.presentation.ui.Routes
 import com.example.a25_09_b3cdev.presentation.ui.theme.A25_09_b3cdevTheme
 import com.example.a25_09_b3cdev.presentation.viewmodel.MainViewModel
+import okhttp3.Route
 
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(
@@ -76,11 +79,12 @@ fun SearchScreenPreview() {
 fun SearchScreen(
     modifier: Modifier = Modifier,
     //Le framework qui crée et recupère l'instance
-    mainViewModel: MainViewModel = viewModel()
+    mainViewModel: MainViewModel =  viewModel(),
+    navHostController : NavHostController? = null
 ) {
 
 
-    val searchText : MutableState<String> = remember { mutableStateOf("") }
+    val searchText : MutableState<String> = remember { mutableStateOf("Nice") }
 
     val list = mainViewModel.dataList.collectAsStateWithLifecycle().value
         //.filter { it.name.contains(searchText.value, ignoreCase = true) }
@@ -109,7 +113,7 @@ fun SearchScreen(
 
         ) {
             items(list.size) {
-                PictureRowItem(data = list[it])
+                PictureRowItem(data = list[it], navHostController = navHostController)
             }
         }
 
@@ -181,7 +185,7 @@ fun SearchBar(modifier : Modifier = Modifier, searchText : MutableState<String>)
 }
 
 @Composable //Composable affichant 1 élément
-fun PictureRowItem(modifier: Modifier = Modifier, data: WeatherEntity) {
+fun PictureRowItem(modifier: Modifier = Modifier, data: WeatherEntity, navHostController: NavHostController?) {
 
     var expended by remember { mutableStateOf(false) }
 
@@ -210,9 +214,11 @@ fun PictureRowItem(modifier: Modifier = Modifier, data: WeatherEntity) {
 
             onError = { println(it) },
             modifier = Modifier
-
                 .heightIn(max = 100.dp)
                 .widthIn(max = 100.dp)
+                .clickable{
+                    navHostController?.navigate(Routes.DetailRoute(data.id))
+                }
         )
 
         Column(modifier = Modifier.padding(10.dp).fillMaxWidth().clickable{
