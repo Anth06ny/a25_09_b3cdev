@@ -18,15 +18,19 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -51,7 +55,6 @@ import com.example.a25_09_b3cdev.presentation.ui.MyError
 import com.example.a25_09_b3cdev.presentation.ui.Routes
 import com.example.a25_09_b3cdev.presentation.ui.theme.A25_09_b3cdevTheme
 import com.example.a25_09_b3cdev.presentation.viewmodel.MainViewModel
-import okhttp3.Route
 
 @Preview(showBackground = true, showSystemUi = true)
 @Preview(
@@ -63,101 +66,119 @@ fun SearchScreenPreview() {
     //Il faut remplacer NomVotreAppliTheme par le thème de votre application
     //Utilisé par exemple dans MainActivity.kt sous setContent {...}
     A25_09_b3cdevTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            val mainViewModel = MainViewModel()
-            mainViewModel.loadFakeData(true, "une erreur")
+        val mainViewModel: MainViewModel = viewModel()
+        mainViewModel.loadFakeData(true, "une erreur")
 
-            SearchScreen(
-                modifier = Modifier.padding(innerPadding),
-                mainViewModel = mainViewModel
-            )
-        }
+        SearchScreen(mainViewModel = mainViewModel)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
     //Le framework qui crée et recupère l'instance
-    mainViewModel: MainViewModel =  viewModel(),
-    navHostController : NavHostController? = null
+    mainViewModel: MainViewModel = viewModel(),
+    navHostController: NavHostController? = null
 ) {
 
-
-    val searchText : MutableState<String> = remember { mutableStateOf("Nice") }
-
-    val list = mainViewModel.dataList.collectAsStateWithLifecycle().value
-        //.filter { it.name.contains(searchText.value, ignoreCase = true) }
-    val errorMessage by mainViewModel.errorMessage.collectAsStateWithLifecycle()
-    val runInProgress by mainViewModel.runInProgress.collectAsStateWithLifecycle()
-
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ) {
-
-        SearchBar(searchText = searchText)
-
-        MyError(errorMessage = errorMessage)
-
-        AnimatedVisibility(runInProgress) {
-            CircularProgressIndicator()
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Météo") },
+                actions = {
+                    IconButton(onClick = { /*  TODO */ }) {
+                        Icon(
+                            Icons.Filled.LocationOn,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            )
         }
 
-        //Permet de remplacer très facilement le RecyclerView. LazyRow existe aussi
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.weight(5f)
+    ) { innerPadding ->
 
+
+        val searchText: MutableState<String> = remember { mutableStateOf("Nice") }
+
+        val list = mainViewModel.dataList.collectAsStateWithLifecycle().value
+        //.filter { it.name.contains(searchText.value, ignoreCase = true) }
+        val errorMessage by mainViewModel.errorMessage.collectAsStateWithLifecycle()
+        val runInProgress by mainViewModel.runInProgress.collectAsStateWithLifecycle()
+
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            items(list.size) {
-                PictureRowItem(data = list[it], navHostController = navHostController)
-            }
-        }
 
-        Row {
+            SearchBar(searchText = searchText)
 
+            MyError(errorMessage = errorMessage)
 
-            Button(
-                onClick = { searchText.value = "" },
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-            ) {
-                Icon(
-                    Icons.Filled.Favorite,
-                    contentDescription = "Localized description",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(R.string.clear_filter))
+            AnimatedVisibility(runInProgress) {
+                CircularProgressIndicator()
             }
 
-            Button(
-                onClick = {
-                    mainViewModel.loadWeathers(searchText.value)
-                },
-                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+            //Permet de remplacer très facilement le RecyclerView. LazyRow existe aussi
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.weight(5f)
+
+
             ) {
-                Icon(
-                    Icons.Filled.Favorite,
-                    contentDescription = "Localized description",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(R.string.bt_load_data))
+                items(list.size) {
+                    PictureRowItem(data = list[it], navHostController = navHostController)
+                }
+            }
+
+            Row {
+
+
+                Button(
+                    onClick = { searchText.value = "" },
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                ) {
+                    Icon(
+                        Icons.Filled.Favorite,
+                        contentDescription = "Localized description",
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(stringResource(R.string.clear_filter))
+                }
+
+                Button(
+                    onClick = {
+                        mainViewModel.loadWeathers(searchText.value)
+                    },
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                ) {
+                    Icon(
+                        Icons.Filled.Favorite,
+                        contentDescription = "Localized description",
+                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(stringResource(R.string.bt_load_data))
+                }
             }
         }
     }
 }
 
 @Composable
-fun SearchBar(modifier : Modifier = Modifier, searchText : MutableState<String>){
+fun SearchBar(modifier: Modifier = Modifier, searchText: MutableState<String>) {
 
 
     TextField(
         value = searchText.value, //Valeur affichée
-        onValueChange = {newValue:String ->  searchText.value = newValue }, //Nouveau texte entrée
+        onValueChange = { newValue: String -> searchText.value = newValue }, //Nouveau texte entrée
         leadingIcon = { //Image d'icône
             Icon(
                 imageVector = Icons.Default.Search,
@@ -216,21 +237,27 @@ fun PictureRowItem(modifier: Modifier = Modifier, data: WeatherEntity, navHostCo
             modifier = Modifier
                 .heightIn(max = 100.dp)
                 .widthIn(max = 100.dp)
-                .clickable{
+                .clickable {
                     navHostController?.navigate(Routes.DetailRoute(data.id))
                 }
         )
 
-        Column(modifier = Modifier.padding(10.dp).fillMaxWidth().clickable{
-            expended = !expended
-        }) {
-            Text(text = data.name,
-                fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
+        Column(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
+                .clickable {
+                    expended = !expended
+                }) {
             Text(
-                text = if(!expended)  data.getResume().take(15) + "..." else data.getResume(),
+                text = data.name,
+                fontSize = 20.sp, color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = if (!expended) data.getResume().take(15) + "..." else data.getResume(),
                 fontSize = 14.sp,
                 modifier = Modifier.animateContentSize()
-                )
+            )
         }
     }
 }
